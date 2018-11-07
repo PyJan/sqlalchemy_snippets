@@ -10,9 +10,11 @@ from wtforms import Form, StringField
 
 app = Flask(__name__)
 
+
 class Userform(Form):
     login = StringField('login')
     password = StringField('password')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
