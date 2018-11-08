@@ -9,15 +9,22 @@
     <form method="POST">
         <table>
             <tr>
-                <td>User:</td><td>{{userform.login}}</td>
+                <td>User: </td><td>{{userform.login}}</td>
             </tr>
              <tr>   
-                <td>Password</td><td>{{userform.password}}</td>
+                <td>Password: </td><td>{{userform.password}}</td>
             </tr>
             <tr>
                 <td colspan="2"><input type="submit" name="Log in"></td>
             </tr>
         </table>
     </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {{message}}
+            {% endfor%}
+        {% endif %}
+    {% endwith %}
 </body>
 </html>
