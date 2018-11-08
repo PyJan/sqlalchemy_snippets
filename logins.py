@@ -39,11 +39,21 @@ def main():
     if request.method == 'POST':
         userform = Userform(request.form)
         session = Session()
-        session.add(User(
-            login = userform.login.data, 
-            password = userform.password.data))
+        current_user = session.query(User).filter_by(login=userform.login.data).first()
+        if current_user is None:
+            print('unknown user')
+            """
+            session.add(User(
+                login = userform.login.data, 
+                password = userform.password.data))
+            """
+        else:
+            if current_user.password == userform.password.data:
+                print('correct password')
+            else:
+                print('wrong password')
         session.commit()
-        print('user {0} added'.format(userform.login.data))
+        #print('user {0} added'.format(userform.login.data))
     else:
         userform = Userform()
     return render_template('main.html', userform=userform)
