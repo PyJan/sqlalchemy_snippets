@@ -5,7 +5,7 @@ Created on Wed Nov  7 22:25:47 2018
 
 @author: jan
 """
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, session, redirect, url_for
 from wtforms import Form, StringField
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -36,25 +36,35 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hejhou'
 
 
+@app.route('/loggedin', methods=['GET', 'POST'])
+def loggedin():
+    return 'You are user {}'.format(session.get('current_user'))
+
+@app.route('/sigin')
+def signin():
+    return 'sign in page'
+
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if request.method == 'POST':
         userform = Userform(request.form)
-        session = Session()
-        current_user = session.query(User).filter_by(login=userform.login.data).first()
+        db_session = Session()
+        current_user = db_session.query(User).filter_by(login=userform.login.data).first()
         if current_user is None:
-            flash('Unknown user')
+            flash('Unknown user', category='UU')
             """
-            session.add(User(
+            db_session.add(User(
                 login = userform.login.data, 
                 password = userform.password.data))
             """
         else:
             if current_user.password == userform.password.data:
                 print('correct password')
+                session['current_user'] = userform.login.data
+                return redirect(url_for('loggedin'))
             else:
-                flash('Wrong password')
-        #session.commit()
+                flash('Wrong password', category='WP')
+        #db_session.commit()
         #print('user {0} added'.format(userform.login.data))
     else:
         userform = Userform()
