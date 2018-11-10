@@ -6,7 +6,7 @@ Created on Wed Nov  7 22:25:47 2018
 @author: jan
 """
 from flask import Flask, render_template, request, flash, session, redirect, url_for
-from wtforms import Form, StringField
+from wtforms import Form, StringField, PasswordField
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
@@ -31,7 +31,7 @@ class Userform(Form):
     password = StringField('password')
 
 class Signupform(Userform):
-    pwdcheck = StringField('pwdcheck')
+    pwdcheck = PasswordField('pwdcheck')
 
 
 
@@ -48,7 +48,20 @@ def loggedin():
 def signin():
     signupform = Signupform(request.form)
     if request.method == 'POST':
-        pass
+        db_session = Session()
+        current_user = db_session.query(User).filter_by(login=signupform.login.data).first()
+        if current_user is not None:
+            flash('User already exists')
+        else:
+            if signupform.password.data != signupform.pwdcheck.data:
+                flash("Password wasn't confirmed")
+            else:
+                db_session.add(User(
+                login = signupform.login.data, 
+                password = signupform.password.data))
+                db_session.commit()
+                session['current_user'] = signupform.login.data
+                return redirect(url_for('loggedin'))
     else:
         pass
     return render_template('signup.html', signupform=signupform)
