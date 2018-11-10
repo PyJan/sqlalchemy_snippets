@@ -30,6 +30,10 @@ class Userform(Form):
     login = StringField('login')
     password = StringField('password')
 
+class Signupform(Userform):
+    pwdcheck = StringField('pwdcheck')
+
+
 
 app = Flask(__name__)
 
@@ -40,9 +44,14 @@ app.config['SECRET_KEY'] = 'hejhou'
 def loggedin():
     return 'You are user {}'.format(session.get('current_user'))
 
-@app.route('/sigin')
+@app.route('/sigin', methods=['GET', 'POST'])
 def signin():
-    return 'sign in page'
+    signupform = Signupform(request.form)
+    if request.method == 'POST':
+        pass
+    else:
+        pass
+    return render_template('signup.html', signupform=signupform)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():

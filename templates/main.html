@@ -17,7 +17,7 @@
                 <td>Password: </td><td>{{userform.password}}</td>
             </tr>
             <tr>
-                <td colspan="2"><input type="submit" name="Log in"></td>
+                <td colspan="2" style="text-align: center"><input type="submit" value="Log in"></td>
             </tr>
         </table>
     </form>
@@ -26,10 +26,10 @@
             {% for category, message in messages %}
                 <span class='error'>{{message}}</span>
                 {% if category == 'UU' %}
-                <a href="{{url_for('signin')}}">sign up here</a>
                 {% endif %}
             {% endfor%}
         {% endif %}
     {% endwith %}
+    <a href="{{url_for('signin')}}">sign up here</a>
 </body>
 </html>
