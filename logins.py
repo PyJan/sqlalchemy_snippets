@@ -48,14 +48,15 @@ app.config['SECRET_KEY'] = 'hejhou'
 
 @app.route('/loggedin', methods=['GET', 'POST'])
 def loggedin():
-    if request.method == 'POST':
-        print(request.form.get('newstr'))
     session_db = Session()
     user = session_db.query(User).filter_by(login=session.get('current_user')).first()
+    if request.method == 'POST':
+        new_strategy = Strategy(
+            strategy=request.form.get('newstr'),
+            loginid=user.id)
+        session_db.add(new_strategy)
+        session_db.commit()
     strategies = session_db.query(Strategy).filter_by(loginid=user.id).all()
-    #print([s.strategy for s in strategies])
-    #print('You are user {}'.format(session.get('current_user')))
-
     return render_template('strategies.html', strategies=[s.strategy for s in strategies])
 
 @app.route('/sigin', methods=['GET', 'POST'])
@@ -88,11 +89,6 @@ def main():
         current_user = db_session.query(User).filter_by(login=userform.login.data).first()
         if current_user is None:
             flash('Unknown user', category='UU')
-            """
-            db_session.add(User(
-                login = userform.login.data, 
-                password = userform.password.data))
-            """
         else:
             if current_user.password == userform.password.data:
                 print('correct password')
