@@ -7,10 +7,10 @@ Created on Wed Nov  7 22:25:47 2018
 """
 from flask import Flask, render_template, request, flash, session, redirect, url_for
 from wtforms import Form, StringField, PasswordField
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 
 engine = create_engine('sqlite:///logins.db')
 Base = declarative_base()
@@ -21,6 +21,13 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     login = Column(String)
     password = Column(String)
+    
+class Strategy(Base):
+    __tablename__ = 'strategies'
+    
+    id = Column(Integer, primary_key=True)
+    strategy = Column(String)
+    loginid = Column(Integer, ForeignKey('users.id'))
 
 Base.metadata.create_all(engine)
 
@@ -34,7 +41,6 @@ class Signupform(Userform):
     pwdcheck = PasswordField('pwdcheck')
 
 
-
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'hejhou'
@@ -42,7 +48,15 @@ app.config['SECRET_KEY'] = 'hejhou'
 
 @app.route('/loggedin', methods=['GET', 'POST'])
 def loggedin():
-    return 'You are user {}'.format(session.get('current_user'))
+    if request.method == 'POST':
+        print(request.form.get('newstr'))
+    session_db = Session()
+    user = session_db.query(User).filter_by(login=session.get('current_user')).first()
+    strategies = session_db.query(Strategy).filter_by(loginid=user.id).all()
+    #print([s.strategy for s in strategies])
+    #print('You are user {}'.format(session.get('current_user')))
+
+    return render_template('strategies.html', strategies=[s.strategy for s in strategies])
 
 @app.route('/sigin', methods=['GET', 'POST'])
 def signin():
@@ -86,8 +100,6 @@ def main():
                 return redirect(url_for('loggedin'))
             else:
                 flash('Wrong password', category='WP')
-        #db_session.commit()
-        #print('user {0} added'.format(userform.login.data))
     else:
         userform = Userform()
     return render_template('main.html', userform=userform)

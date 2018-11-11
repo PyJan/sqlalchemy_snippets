@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Strategies</title>
+</head>
+<body>
+    this is your strategy:
+    <table>
+        {% for strategy in strategies %}
+        <tr>
+            <td>{{strategy}}</td>
+        </tr>
+        {% endfor %}  
+    </table>
+    <form method="POST">
+        Create new strategy: <input type="text" name="newstr"><br>
+        <input type="submit" value='Create'>
+    </form>
+</body>
+</html>
