@@ -57,13 +57,14 @@ def loggedin():
         session_db.add(new_strategy)
         session_db.commit()
     strategies = session_db.query(Strategy).filter_by(loginid=user.id).all()
+    session_db.close()
     return render_template('strategies.html', strategies=[s.strategy for s in strategies])
 
 @app.route('/sigin', methods=['GET', 'POST'])
 def signin():
     signupform = Signupform(request.form)
+    db_session = Session()
     if request.method == 'POST':
-        db_session = Session()
         current_user = db_session.query(User).filter_by(login=signupform.login.data).first()
         if current_user is not None:
             flash('User already exists')
@@ -79,13 +80,14 @@ def signin():
                 return redirect(url_for('loggedin'))
     else:
         pass
+    db_session.close()
     return render_template('signup.html', signupform=signupform)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    db_session = Session()
     if request.method == 'POST':
         userform = Userform(request.form)
-        db_session = Session()
         current_user = db_session.query(User).filter_by(login=userform.login.data).first()
         if current_user is None:
             flash('Unknown user', category='UU')
@@ -98,6 +100,7 @@ def main():
                 flash('Wrong password', category='WP')
     else:
         userform = Userform()
+    db_session.close()
     return render_template('main.html', userform=userform)
 
 if __name__ == '__main__':
