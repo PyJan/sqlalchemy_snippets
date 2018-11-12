@@ -8,3 +8,8 @@ h1 {
 a {
     color: black;
 }
+.val {
+    color: red;
+    font-size: small; 
+    text-align: right;
+}

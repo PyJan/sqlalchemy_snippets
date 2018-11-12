@@ -11,9 +11,19 @@
         <table>
             <tr>
                 <td>User name: </td><td>{{signupform.login}}</td>
+                {% if signupform.login.errors %}
+                {% for error in signupform.login.errors %}
+                    <tr><td colspan="2" style="text-align:right"><span class="val">{{error}}</span></td></tr>
+                {% endfor %}
+                {% endif %}
             </tr>
             <tr>
                 <td>Password: </td><td>{{signupform.password}}</td>
+                {% if signupform.password.errors %}
+                {% for error in signupform.password.errors %}
+                    <tr><td colspan="2" style="text-align:right"><span class="val">{{error}}</span></td></tr>
+                {% endfor %}
+                {% endif %}
             </tr>
             <tr>
                 <td>Confirm password: </td><td>{{signupform.pwdcheck}}</td>

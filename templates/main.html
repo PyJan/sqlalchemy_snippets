@@ -12,9 +12,19 @@
         <table>
             <tr>
                 <td>User: </td><td>{{userform.login}}</td>
+                {% if userform.login.errors %}
+                    {% for error in userform.login.errors %}
+                        <tr><td colspan="2" style="text-align:right"><span class="val">{{error}}</span></td></tr>
+                    {% endfor %}
+                {% endif %}
             </tr>
              <tr>   
                 <td>Password: </td><td>{{userform.password}}</td>
+                {% if userform.password.errors %}
+                {% for error in userform.password.errors %}
+                    <tr><td colspan="2" style="text-align:right"><span class="val">{{error}}</span></td></tr>
+                {% endfor %}
+                {% endif %}
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center"><input type="submit" value="Log in"></td>
