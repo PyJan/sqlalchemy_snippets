@@ -63,7 +63,8 @@ def loggedin():
             flash('Longer strategy name needed')
     strategies = session_db.query(Strategy).filter_by(loginid=user.id).all()
     session_db.close()
-    return render_template('strategies.html', strategies=[s.strategy for s in strategies])
+    return render_template('strategies.html', strategies=[s.strategy for s in strategies],
+                            username=session.get('current_user'))
 
 @app.route('/sigin', methods=['GET', 'POST'])
 def signin():
