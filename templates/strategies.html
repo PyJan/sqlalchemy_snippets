@@ -15,7 +15,7 @@
     <table>
         {% for strategy in strategies %}
         <tr>
-            <td>{{strategy}}</td>
+            <td><a href="{{url_for('strategy', strategyname=strategy)}}">{{strategy}}</a></td>
         </tr>
         {% endfor %}  
     </table>

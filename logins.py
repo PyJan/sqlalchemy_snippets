@@ -47,6 +47,13 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'hejhou'
 
+@app.route('/strategy', defaults={'strategyname':None})
+@app.route('/strategy/<string:strategyname>')
+def strategy(strategyname):
+    if strategyname is None:
+        return 'No strategy selected'
+    else:
+        return 'you are in strategy {0}'.format(strategyname)
 
 @app.route('/loggedin', methods=['GET', 'POST'])
 def loggedin():
