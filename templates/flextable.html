@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        
+        {% for item in x %}
+        <form action="{{url_for('delete')}}" method="POST">
+            <input type="hidden" value="{{item}}" name="name">
+            <tr>
+                <td>{{item}}</td>
+                <td><input type="submit" name="deletion" value="Delete"></td>
+            </tr>
+        </form> 
+        {% endfor %}
+    </table>
+</body>
+</html>
