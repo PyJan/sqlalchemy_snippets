@@ -9,13 +9,14 @@
 <body>
     <div style="text-align:right">
         <a href="{{url_for('main')}}">Log off</a>
+        <h2>Your selected strategy is {{usedstrategy}}</h2>
     </div>
     <h2>Hello, {{username}}</h2>
-    This is your strategy:<br><br>
+    These are your strategies:<br><br>
     <table>
         {% for strategy in strategies %}
         <tr>
-            <td><a href="{{url_for('strategy', strategyname=strategy)}}">{{strategy}}</a></td>
+            <td><a href="{{url_for('loggedin', strategyname=strategy)}}">{{strategy}}</a></td>
         </tr>
         {% endfor %}  
     </table>

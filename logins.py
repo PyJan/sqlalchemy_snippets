@@ -55,8 +55,13 @@ def strategy(strategyname):
     else:
         return 'you are in strategy {0}'.format(strategyname)
 
-@app.route('/loggedin', methods=['GET', 'POST'])
-def loggedin():
+@app.route('/loggedin', defaults={'strategyname':None}, methods=['GET','POST'])
+@app.route('/loggedin/<string:strategyname>', methods=['GET', 'POST'])
+def loggedin(strategyname):
+    if strategyname is None:
+        usedstrategy = ''
+    else:
+        usedstrategy = strategyname
     session_db = Session()
     user = session_db.query(User).filter_by(login=session.get('current_user')).first()
     if request.method == 'POST':
@@ -71,7 +76,7 @@ def loggedin():
     strategies = session_db.query(Strategy).filter_by(loginid=user.id).all()
     session_db.close()
     return render_template('strategies.html', strategies=[s.strategy for s in strategies],
-                            username=session.get('current_user'))
+                            username=session.get('current_user'), usedstrategy=usedstrategy)
 
 @app.route('/sigin', methods=['GET', 'POST'])
 def signin():
