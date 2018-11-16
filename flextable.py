@@ -21,6 +21,13 @@ def delete():
         db.session.commit()
     return redirect(url_for('main'))
 
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    if request.method == 'POST':
+        db.session.add(Items(item=request.form.get('addthis')))
+        db.session.commit()
+    return redirect(url_for('main'))
+
 @app.route('/', methods=['GET', 'POST'])
 def main():
     return render_template('flextable.html', x=[x.item for x in Items.query.all()])
