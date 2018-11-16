@@ -13,6 +13,7 @@ class Items(db.Model):
     def __repr__(self):
         return '<Item {}>'.format(self.item)
 
+db.create_all()
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
